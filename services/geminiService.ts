@@ -2,15 +2,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { RunRecord } from "../types";
 
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-  // This is a placeholder check. The environment variable is expected to be set in the execution environment.
-  console.warn("API_KEY environment variable not set. Gemini API calls will fail.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
-
 function formatRecordsForPrompt(records: RunRecord[]): string {
     return records.map(r => 
         `Data: ${r.date}, Ganhos: R$${r.totalEarnings.toFixed(2)}, KM: ${r.kmDriven}, Horas: ${r.hoursWorked?.toFixed(1) || 'N/A'}`
@@ -18,6 +9,17 @@ function formatRecordsForPrompt(records: RunRecord[]): string {
 }
 
 export const getPerformanceAnalysis = async (records: RunRecord[]): Promise<string> => {
+    // Acessa a API_KEY de uma forma segura para o navegador, evitando o crash na inicialização.
+    // Em um ambiente de navegador puro, `process` não existe.
+    // @ts-ignore
+    const API_KEY = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
+
+    if (!API_KEY) {
+      console.error("API_KEY environment variable not set or accessible in this environment.");
+      throw new Error("A chave de API (API_KEY) não está configurada no ambiente de execução. A funcionalidade Premium não pode ser usada.");
+    }
+
+    const ai = new GoogleGenAI({ apiKey: API_KEY });
     const model = 'gemini-2.5-flash';
     const formattedData = formatRecordsForPrompt(records);
 
