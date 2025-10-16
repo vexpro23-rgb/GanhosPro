@@ -1,0 +1,21 @@
+{
+  "short_name": "GanhosPro",
+  "name": "GanhosPro - Lucro Real para Motoristas",
+  "description": "Uma ferramenta essencial para motoristas de aplicativo calcularem seu lucro líquido real por KM e por hora, transformando dados de corrida em inteligência financeira.",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#10b981",
+  "background_color": "#1f2937"
+}
