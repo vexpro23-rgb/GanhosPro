@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { HashRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { Database, Settings as SettingsIcon, Sparkles, BarChart3, Home } from 'lucide-react';
@@ -34,7 +35,8 @@ const App: React.FC = () => {
         <main className="flex-grow overflow-y-auto bg-brand-dark p-4 pb-20">
           <Routes>
             <Route path="/" element={<Dashboard settings={settings} addOrUpdateRecord={addOrUpdateRecord} />} />
-            <Route path="/history" element={<History records={records} addOrUpdateRecord={addOrUpdateRecord} deleteRecord={deleteRecord} settings={settings} />} />
+            {/* FIX: Removed unused 'addOrUpdateRecord' prop from History component to resolve TypeScript error. */}
+            <Route path="/history" element={<History records={records} deleteRecord={deleteRecord} settings={settings} />} />
             <Route path="/settings" element={<Settings settings={settings} setSettings={setSettings} />} />
             <Route path="/premium" element={<Premium records={records} />} />
           </Routes>

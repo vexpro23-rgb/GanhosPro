@@ -9,17 +9,8 @@ function formatRecordsForPrompt(records: RunRecord[]): string {
 }
 
 export const getPerformanceAnalysis = async (records: RunRecord[]): Promise<string> => {
-    // Acessa a API_KEY de uma forma segura para o navegador, evitando o crash na inicialização.
-    // Em um ambiente de navegador puro, `process` não existe.
-    // @ts-ignore
-    const API_KEY = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
-
-    if (!API_KEY) {
-      console.error("API_KEY environment variable not set or accessible in this environment.");
-      throw new Error("A chave de API (API_KEY) não está configurada no ambiente de execução. A funcionalidade Premium não pode ser usada.");
-    }
-
-    const ai = new GoogleGenAI({ apiKey: API_KEY });
+    // Fix: Per coding guidelines, initialize AI with API_KEY from process.env directly, assuming it is available.
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const model = 'gemini-2.5-flash';
     const formattedData = formatRecordsForPrompt(records);
 
@@ -47,6 +38,7 @@ export const getPerformanceAnalysis = async (records: RunRecord[]): Promise<stri
         return response.text;
     } catch (error) {
         console.error("Gemini API error:", error);
-        throw new Error("Não foi possível se comunicar com a API do Gemini. Verifique sua chave de API e a conexão.");
+        // Fix: Re-throw original error for better debugging and to let UI handle user-facing message.
+        throw error;
     }
 };

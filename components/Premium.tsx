@@ -26,7 +26,8 @@ const Premium: React.FC<PremiumProps> = ({ records }) => {
             setAnalysis(result);
         } catch (error) {
             console.error('Error getting analysis:', error);
-            toast.error('Falha ao obter análise. Verifique seu API_KEY e tente novamente.');
+            // Fix: Per coding guidelines, do not ask the user to check their API_KEY.
+            toast.error('Falha ao obter análise. Verifique sua conexão e tente novamente.');
         } finally {
             setIsLoading(false);
         }
