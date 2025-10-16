@@ -1,8 +1,6 @@
-
-
 import React, { useState } from 'react';
 import { HashRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { Database, Settings as SettingsIcon, Sparkles, BarChart3, Home } from 'lucide-react';
+import { Database, Settings as SettingsIcon, Crown, Home } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import History from './components/History';
 import Settings from './components/Settings';
@@ -53,7 +51,7 @@ const App: React.FC = () => {
             </NavLink>
              <NavLink to="/premium" className={({ isActive }) => `flex flex-col items-center justify-center w-full text-xs transition-colors ${isActive ? 'text-brand-primary' : 'text-gray-400 hover:text-brand-primary'}`}>
                <div className="relative">
-                <Sparkles size={24} />
+                <Crown size={24} className="text-brand-accent" />
                 <span className="absolute -top-2 -right-2 bg-brand-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">PRO</span>
                </div>
               <span>Premium</span>
