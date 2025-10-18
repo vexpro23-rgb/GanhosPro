@@ -1,5 +1,5 @@
-
-import { useState, useEffect } from 'react';
+// Fix: Import `React` to make its namespace available for type annotations.
+import React, { useState, useEffect } from 'react';
 
 function getValue<T>(key: string, initialValue: T | (() => T)): T {
   const savedValue = localStorage.getItem(key);

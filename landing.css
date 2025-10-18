@@ -1,0 +1,446 @@
+:root {
+    --brand-primary: #10b981;
+    --brand-secondary: #059669;
+    --brand-dark: #111827;
+    --brand-light: #f9fafb;
+    --brand-accent: #f59e0b;
+    --brand-gray: #374151;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --background: #111827;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Scoping styles to the landing page component */
+.landing-page {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+.landing-page .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* --- Hero Section --- */
+.landing-page .hero {
+    background: radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1), transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.08), transparent 40%),
+                var(--background);
+    padding: 6rem 0;
+    overflow: hidden;
+}
+
+.landing-page .hero-content {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+.landing-page .hero-text {
+    flex: 1;
+    animation: slideInFromLeft 1s ease-out forwards;
+}
+
+.landing-page .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.landing-page .logo svg {
+    color: var(--brand-primary);
+}
+
+.landing-page .logo h1 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.landing-page .hero-text h2 {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.landing-page .hero-text p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 500px;
+}
+
+.landing-page .cta-button {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.landing-page .cta-button:hover {
+    transform: translateY(-3px);
+}
+
+.landing-page .cta-button.primary {
+    background-color: var(--brand-primary);
+    color: white;
+}
+
+.landing-page .cta-button.secondary {
+    background-color: var(--brand-accent);
+    color: var(--brand-dark);
+}
+
+/* --- Phone Mockup --- */
+.landing-page .hero-mockup {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    animation: fadeIn 1s 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+.landing-page .phone {
+    width: 300px;
+    height: 600px;
+    background: #1f2937;
+    border-radius: 40px;
+    border: 10px solid #1f2937;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.5);
+    padding: 10px;
+    transform: rotateY(-15deg) rotateX(10deg);
+    transition: transform 0.5s ease;
+}
+
+.landing-page .phone:hover {
+    transform: rotateY(0) rotateX(0);
+}
+
+.landing-page .screen {
+    background: var(--brand-dark);
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.landing-page .mock-header {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--brand-primary);
+}
+
+.landing-page .mock-main-card {
+    background: var(--brand-gray);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.landing-page .mock-main-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.landing-page .mock-main-card span {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #4ade80; /* green-400 */
+}
+
+.landing-page .mock-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.landing-page .mock-card {
+    background: var(--brand-gray);
+    border-radius: 12px;
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.landing-page .mock-card p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.landing-page .mock-card span {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #4ade80; /* green-400 */
+}
+
+.landing-page .mock-card.blue span { color: #60a5fa; } /* blue-400 */
+.landing-page .mock-card.yellow span { color: #facc15; } /* yellow-400 */
+
+.landing-page .mock-footer {
+    margin-top: auto;
+    text-align: center;
+    font-weight: 600;
+    color: var(--brand-gray);
+    user-select: none;
+}
+
+
+/* --- Sections --- */
+.landing-page section {
+    padding: 6rem 0;
+}
+
+.landing-page .section-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.landing-page .section-subtitle {
+    font-size: 1.125rem;
+    text-align: center;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto 3rem auto;
+}
+
+/* --- Features Section --- */
+.landing-page .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 4rem;
+}
+
+.landing-page .feature-card {
+    background: var(--brand-gray);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.landing-page .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--brand-primary);
+}
+
+.landing-page .feature-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--brand-primary);
+}
+.landing-page .feature-icon.premium {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--brand-accent);
+}
+
+.landing-page .feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.landing-page .feature-card p {
+    color: var(--text-secondary);
+}
+
+
+/* --- Install Section --- */
+.landing-page .install {
+    background-color: var(--brand-dark);
+}
+
+.landing-page .install-steps {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 4rem;
+}
+
+.landing-page .install-card {
+    background-color: var(--brand-gray);
+    border-radius: 12px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.landing-page .install-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1.5rem auto;
+}
+.landing-page .install-icon.android { background-color: rgba(163, 230, 53, 0.1); color: #a3e635; } /* lime-400 */
+.landing-page .install-icon.ios { background-color: rgba(56, 189, 248, 0.1); color: #38bdf8; } /* lightBlue-400 */
+
+
+.landing-page .install-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.landing-page .install-card ol {
+    list-style-position: inside;
+    text-align: left;
+    display: inline-block;
+    color: var(--text-secondary);
+}
+
+.landing-page .install-card li {
+    margin-bottom: 0.75rem;
+}
+
+.landing-page .install-card a {
+    color: var(--brand-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+.landing-page .install-card a:hover {
+    text-decoration: underline;
+}
+
+/* --- CTA Section --- */
+.landing-page .cta-section {
+    background: linear-gradient(45deg, var(--brand-secondary), var(--brand-primary));
+    text-align: center;
+}
+
+.landing-page .cta-section h2 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+
+.landing-page .cta-section p {
+    margin-bottom: 2rem;
+    font-size: 1.125rem;
+    opacity: 0.9;
+}
+
+
+/* --- Footer --- */
+.landing-page footer {
+    background-color: var(--brand-dark);
+    padding: 2rem 0;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* --- Animations --- */
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.landing-page .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.landing-page .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* --- Responsive --- */
+
+@media (max-width: 900px) {
+    .landing-page .hero-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .landing-page .hero-text p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .landing-page .hero-mockup {
+        margin-top: 3rem;
+    }
+    .landing-page .phone {
+        transform: rotateY(0) rotateX(0);
+    }
+}
+
+
+@media (max-width: 768px) {
+    .landing-page h1, .landing-page .logo h1 { font-size: 1.75rem; }
+    .landing-page h2, .landing-page .section-title { font-size: 2rem; }
+    .landing-page .hero-text h2 { font-size: 2.5rem; }
+
+    .landing-page .install-steps {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .landing-page .container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .landing-page .phone {
+        width: 260px;
+        height: 520px;
+    }
+    .landing-page .hero {
+        padding: 4rem 0;
+    }
+    .landing-page section {
+        padding: 4rem 0;
+    }
+    .landing-page .features-grid {
+        grid-template-columns: 1fr;
+    }
+}

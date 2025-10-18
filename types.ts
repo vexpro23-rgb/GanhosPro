@@ -13,6 +13,8 @@ export interface AppSettings {
 }
 
 export interface CalculationResult {
+  totalEarnings: number;
+  grossEarningsPerKm: number;
   grossProfit: number;
   carCost: number;
   netProfit: number;

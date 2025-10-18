@@ -1,10 +1,11 @@
 // A robust service worker for caching resources for offline use.
 
-const CACHE_NAME = 'ganhospro-cache-v2';
+const CACHE_NAME = 'ganhospro-cache-v12';
 // Add core files to cache. As this is a single page app, index.html is the main entry point.
 const urlsToCache = [
   '/',
   '/index.html',
+  '/landing.css',
   '/manifest.json'
 ];
 

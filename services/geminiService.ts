@@ -1,44 +1,104 @@
-
 import { GoogleGenAI } from "@google/genai";
-import { RunRecord } from "../types";
+import { RunRecord, AppSettings } from '../types';
 
-function formatRecordsForPrompt(records: RunRecord[]): string {
-    return records.map(r => 
-        `Data: ${r.date}, Ganhos: R$${r.totalEarnings.toFixed(2)}, KM: ${r.kmDriven}, Horas: ${r.hoursWorked?.toFixed(1) || 'N/A'}`
-    ).join('\n');
-}
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-export const getPerformanceAnalysis = async (records: RunRecord[]): Promise<string> => {
-    // Fix: Per coding guidelines, initialize AI with API_KEY from process.env directly, assuming it is available.
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    const model = 'gemini-2.5-flash';
-    const formattedData = formatRecordsForPrompt(records);
+export const analyzeRecords = async (records: RunRecord[], settings: AppSettings): Promise<string> => {
+    const recordsSummary = records.map(r => {
+        const date = new Date(r.date).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        const carCost = r.kmDriven * settings.costPerKm;
+        const netProfit = r.totalEarnings - (r.additionalCosts || 0) - carCost;
+        return `- Data: ${date}, Ganhos: R$${r.totalEarnings.toFixed(2)}, KM: ${r.kmDriven.toFixed(1)}, Lucro Líquido: R$${netProfit.toFixed(2)}`;
+    }).join('\n');
 
     const prompt = `
-        Você é um analista financeiro especialista em otimizar ganhos para motoristas de aplicativo.
-        Analise os seguintes dados de corridas de um motorista e forneça insights acionáveis.
+        Você é um assistente financeiro especializado em analisar dados de motoristas de aplicativo.
+        Analise os seguintes registros de ganhos de um motorista. O custo por KM configurado é de R$${settings.costPerKm.toFixed(2)}.
 
-        **Dados:**
-        ${formattedData}
+        Registros:
+        ${recordsSummary}
 
-        **Sua Tarefa:**
-        1.  **Resumo de Performance:** Calcule e apresente o total de ganhos, a média de ganhos por dia e o lucro líquido médio por KM.
-        2.  **Identifique os Dias Mais Rentáveis:** Com base nos dados, aponte quais dias da semana ou datas foram mais lucrativos.
-        3.  **Sugestões de Melhoria:** Ofereça 2-3 dicas práticas e específicas para este motorista aumentar seus lucros. Por exemplo, focar em horários de pico se os dados sugerirem, ou otimizar rotas para reduzir KM por ganho.
-        4.  **Conclusão:** Termine com uma nota de encorajamento.
+        Com base nesses dados, forneça uma análise concisa e útil. Inclua:
+        1.  Um resumo geral do desempenho (Média de lucro líquido diário, média de R$/KM rodado líquido).
+        2.  Identifique o dia mais lucrativo e o menos lucrativo.
+        3.  Ofereça 2-3 dicas práticas e acionáveis para que o motorista possa aumentar seus lucros, com base nos dados fornecidos.
 
-        Seja claro, conciso e use formatação markdown com títulos e listas para facilitar a leitura.
+        Formate sua resposta de forma clara e amigável. Use bullets points para as dicas.
     `;
 
     try {
         const response = await ai.models.generateContent({
-            model: model,
+            model: 'gemini-2.5-flash',
             contents: prompt,
+            config: {
+                systemInstruction: "Você é um especialista em finanças para motoristas de aplicativo. Seja direto, use a moeda Real (R$) e a métrica de quilômetros (KM)."
+            }
         });
         return response.text;
     } catch (error) {
-        console.error("Gemini API error:", error);
-        // Fix: Re-throw original error for better debugging and to let UI handle user-facing message.
-        throw error;
+        console.error("Gemini API error in analyzeRecords:", error);
+        throw new Error("Falha ao comunicar com o serviço de IA. Verifique sua chave de API e tente novamente.");
     }
+};
+
+export const getChatFollowUp = async (
+  originalAnalysis: string,
+  chatHistory: { role: 'user' | 'model'; parts: { text: string }[] }[],
+  userQuestion: string
+): Promise<string> => {
+    const history = [
+        { role: 'user' as const, parts: [{ text: `Esta é a análise original que você me forneceu:\n\n${originalAnalysis}` }] },
+        { role: 'model' as const, parts: [{ text: "Entendido. Estou pronto para responder perguntas sobre esta análise." }] },
+        ...chatHistory.slice(0, -1), // Send history without the last user message
+    ];
+
+    try {
+        const chat = ai.chats.create({
+            model: 'gemini-2.5-flash',
+            history: history,
+            config: {
+                systemInstruction: "Você é um especialista em finanças para motoristas de aplicativo. Responda às perguntas do usuário de forma curta e direta, com base na análise original e no histórico da conversa."
+            }
+        });
+        const response = await chat.sendMessage({ message: userQuestion });
+        return response.text;
+    } catch (error) {
+        console.error("Gemini API error in getChatFollowUp:", error);
+        throw new Error("Falha ao comunicar com o serviço de IA para o chat.");
+    }
+};
+
+
+export const getIntelligentReportAnalysis = async (
+  reportData: { date: string; value: number; metric: string; unit: string }[],
+  metricLabel: string
+): Promise<string> => {
+  const dataSummary = reportData
+    .map(d => `Data: ${d.date}, Valor: ${d.value.toFixed(2)} ${d.unit}`)
+    .join('\n');
+
+  const prompt = `
+    Você é um assistente financeiro conciso.
+    Analise os seguintes dados de um relatório personalizado de um motorista de aplicativo sobre a métrica "${metricLabel}".
+
+    Dados do Relatório:
+    ${dataSummary}
+
+    Forneça um feedback de UMA frase ou no máximo duas, resumindo o desempenho ou destacando um ponto importante (como o melhor dia ou uma tendência).
+    Seja extremamente direto e objetivo. Exemplo: "Seu desempenho teve um pico no dia X, mas mostrou uma queda nos dias seguintes." ou "Sua média de ${metricLabel} se manteve estável durante o período."
+  `;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        systemInstruction: "Seja um especialista financeiro que fornece insights rápidos e diretos. Use a moeda Real (R$) e a métrica de quilômetros (KM)."
+      }
+    });
+    return response.text;
+  } catch (error) {
+    console.error("Gemini API error in getIntelligentReportAnalysis:", error);
+    throw new Error("Falha ao gerar o insight para o relatório.");
+  }
 };
